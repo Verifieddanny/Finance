@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import logo from "../assets/navbar/logo_at_nav_bar.png";
+import logo from "../../assets/navbar/logo_at_nav_bar.png";
 import {
   BsDoorOpen,
   BsMoon,
@@ -9,12 +9,47 @@ import {
   BsUpload,
 } from "react-icons/bs";
 import { FaBtc, FaUserAlt } from "react-icons/fa";
+import Axios from "axios";
 
-const Dashborad = ({ theme, setNavon, setTheme }) => {
+const Deposit = ({ theme, setNavon, setTheme }) => {
   const [isClosed, setIsClosed] = useState(true);
+  const [prices, setCoins] = useState({});
+  const [selected, setSelected] = useState("bitcoin");
+  const [value, setValue] = useState(0);
+  const [amount, setAmount] = useState(0);
 
   useEffect(() => {
     setNavon(false);
+  }, []);
+
+  useEffect(() => {
+    if (selected === "bitcoin") {
+      setAmount(Number(value) / prices.btc);
+    } else if (selected === "ethereum") {
+      setAmount(Number(value) / prices.eth);
+    } else if (selected === "bsc") {
+      setAmount(Number(value) / prices.bsc);
+    } else if (selected === "ripple") {
+      setAmount(Number(value) / prices.ripple);
+    } else if (selected === "solana") {
+      setAmount(Number(value) / prices.sol);
+    } else if (selected === "usdt") {
+      setAmount(Number(value));
+    }
+  }, [value, prices, selected]);
+
+  useEffect(() => {
+    Axios.get("https://api.coinstats.app/public/v1/coins").then((response) => {
+      console.log(prices);
+      setCoins({
+        btc: response.data.coins[0].price,
+        eth: response.data.coins[1].price,
+        usdt: response.data.coins[2].price,
+        bsc: response.data.coins[3].price,
+        ripple: response.data.coins[5].price,
+        sol: response.data.coins[9].price,
+      });
+    });
   }, []);
 
   return (
@@ -90,7 +125,7 @@ const Dashborad = ({ theme, setNavon, setTheme }) => {
               <li>
                 <Link
                   to="/dashboard"
-                  className={`flex w-full  items-center p-2 text-gray-900 rounded-lg active dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
+                  className={`flex w-full  items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
                 >
                   <div>
                     <FaUserAlt />
@@ -101,7 +136,7 @@ const Dashborad = ({ theme, setNavon, setTheme }) => {
               <li>
                 <Link
                   to="/deposit"
-                  className={`flex w-full items-center p-2 text-gray-900 rounded-lg  dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
+                  className={`flex w-full items-center p-2 text-gray-900 rounded-lg active dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
                 >
                   <div>
                     <BsDownload />
@@ -148,54 +183,62 @@ const Dashborad = ({ theme, setNavon, setTheme }) => {
         <div className="p-4 lg:ml-56 dark:bg-gray-700 min-h-screen ">
           <div className="md:p-4  rounded-lg dark:border-gray-700 mt-14">
             <h1 className="text-xl dark:text-white mb-3 font-medium">
-              Hello, User
+              Deposit Funds
             </h1>
-            <div className="grid border-gray-800 rounded p-2 border-dashed border-2 lg:grid-cols-3 gap-4 mb-4">
-              {/* Assets value  */}
-
-              <div className="flex min-w-[240px] w-full border-gray-500 justify-between border-2 dark:border-0 text-gray-900 dark:text-white p-4 flex-col min-h-24 rounded bg-gray-50 dark:bg-gray-800">
-                <div className="text-lg overflow-ellipsis mb-3">
-                  Total Assets Value:
-                </div>
-                <div className="text-2xl mb-3 font-medium">$0.00</div>
-                <hr />
-                <div className="flex items-center gap-3">
-                  <button className="bg-green-100 mt-3 px-3 py-1 rounded hover:bg-green-500 hover:text-white dark:hover:text-white dark:text-gray-900 ">
-                    Deposit
+            <main className="grid place-items-center w-full">
+              <div className="grid w-full max-w-3xl py-5 border-gray-800 mt-5 dark:text-white rounded p-2 border-dashed border-2 gap-4 mb-4">
+                <section className="px-2">
+                  <p className="text-sm mb-3">SELECT WALLET:</p>
+                  <select
+                    className="w-full px-2 border-2 dark:border-0 bg-transparent py-4 rounded-lg text-gray-900 dark:text-white font-medium outline-none dark:bg-gray-800 "
+                    onChange={(e) => {
+                      setSelected(e.target.value);
+                    }}
+                    name="crypto"
+                  >
+                    <option value="bitcoin">-BITCOIN WALLET</option>
+                    <option value="ethereum">-ETHEREUM WALLET</option>
+                    <option value="solana">-SOLANA WALLET</option>
+                    <option value="bsc">-BINANCE COIN WALLET</option>
+                    <option value="usdt">-TETHER USDT WALLET</option>
+                    <option value="ripple">-RIPPLE WALLET</option>
+                  </select>
+                  <p className="text-sm my-3">
+                    AMOUNT
+                    <sub className="ml-2 text-xs font-bold dark:text-blue-300 text-blue-500 ">
+                      USD | <span className="italic">MIN 100 USD</span>
+                    </sub>
+                  </p>
+                  <input
+                    type="number"
+                    value={value}
+                    onChange={(e) => {
+                      setValue(e.target.value);
+                    }}
+                    placeholder="0.00"
+                    className="w-full px-2 border-2 dark:border-0 bg-transparent py-4 rounded-lg text-gray-900 dark:text-white font-medium outline-none dark:bg-gray-800 "
+                  />
+                  <p className="text-sm my-3">
+                    AMOUNT
+                    <sub className="ml-2 text-xs font-bold dark:text-blue-300 text-blue-500 ">
+                      BTC
+                    </sub>
+                  </p>
+                  <input
+                    type="number"
+                    value={amount}
+                    placeholder="0.00"
+                    className="w-full px-2 border-2 pointer-events-none dark:border-0 bg-gray-200 py-4 rounded-lg text-gray-900 dark:text-white font-medium outline-none dark:bg-gray-800 "
+                  />
+                  <button
+                    disabled={Number(value) < 100}
+                    className="w-full h-12 mt-5 disabled:text-gray-900 rounded-xl disabled:cursor-not-allowed disabled:dark:text-white disabled:dark:bg-slate-500 disabled:bg-slate-300 bg-slate-600 text-white dark:bg-slate-800  "
+                  >
+                    Confirm
                   </button>
-                  <button className="bg-red-100 mt-3 px-3 py-1 rounded hover:bg-red-500 hover:text-white dark:hover:text-white dark:text-gray-900 ">
-                    Withdraw
-                  </button>
-                </div>
+                </section>
               </div>
-
-              {/* Staked Assets  */}
-
-              <div className="flex min-w-[240px] w-full border-gray-500 justify-between border-2 dark:border-0 text-gray-900 dark:text-white p-4 flex-col min-h-24 rounded bg-gray-50 dark:bg-gray-800">
-                <div className="text-lg overflow-ellipsis mb-3">
-                  Staked Assets Value:
-                </div>
-                <div className="text-2xl mb-3 font-medium">$0.00</div>
-                <hr />
-                <div className="flex items-center gap-3">
-                  <button className="bg-green-100 mt-3 px-3 py-1 rounded hover:bg-green-500 hover:text-white dark:hover:text-white dark:text-gray-900 ">
-                    Investments
-                  </button>
-                </div>
-              </div>
-
-              {/* Referrals  */}
-              <div className="flex min-w-[240px] w-full border-gray-500 justify-between border-2 dark:border-0 text-gray-900 dark:text-white p-4 flex-col min-h-24 rounded bg-gray-50 dark:bg-gray-800">
-                <div className="text-lg overflow-ellipsis mb-3">Referrals:</div>
-                <div className="text-2xl mb-3 font-medium">0</div>
-                <hr />
-                <div className="flex items-center gap-3">
-                  <button className="bg-green-100 mt-3 px-3 py-1 rounded hover:bg-zinc-600  hover:text-white dark:hover:text-white dark:text-gray-900 ">
-                    Referral
-                  </button>
-                </div>
-              </div>
-            </div>
+            </main>
           </div>
         </div>
       </div>
@@ -203,4 +246,4 @@ const Dashborad = ({ theme, setNavon, setTheme }) => {
   );
 };
 
-export default Dashborad;
+export default Deposit;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import logo from "../assets/navbar/logo_at_nav_bar.png";
+import logo from "../../assets/navbar/logo_at_nav_bar.png";
 import {
   BsDoorOpen,
   BsMoon,
@@ -9,13 +9,48 @@ import {
   BsUpload,
 } from "react-icons/bs";
 import { FaBtc, FaUserAlt } from "react-icons/fa";
+import Axios from "axios";
 
-const Dashborad = ({ theme, setNavon, setTheme }) => {
+const Crypto = ({ theme, setNavon, setTheme }) => {
   const [isClosed, setIsClosed] = useState(true);
+  const [prices, setCoins] = useState({});
+  const [selected, setSelected] = useState("bitcoin");
+  const [value, setValue] = useState(0);
+  const [amount, setAmount] = useState(0);
 
   useEffect(() => {
     setNavon(false);
   }, []);
+
+  useEffect(() => {
+    if (selected === "bitcoin") {
+      setAmount(Number(value) / prices.btc);
+    } else if (selected === "ethereum") {
+      setAmount(Number(value) / prices.eth);
+    } else if (selected === "bsc") {
+      setAmount(Number(value) / prices.bsc);
+    } else if (selected === "ripple") {
+      setAmount(Number(value) / prices.ripple);
+    } else if (selected === "solana") {
+      setAmount(Number(value) / prices.sol);
+    } else if (selected === "usdt") {
+      setAmount(Number(value));
+    }
+  }, [value, prices, selected]);
+
+  useEffect(() => {
+    Axios.get("https://api.coinstats.app/public/v1/coins").then((response) => {
+      //   console.log(prices);
+      setCoins({
+        btc: response.data.coins[0],
+        eth: response.data.coins[1],
+        usdt: response.data.coins[2],
+        bsc: response.data.coins[3],
+        ripple: response.data.coins[5],
+        sol: response.data.coins[9],
+      });
+    });
+  }, [prices]);
 
   return (
     <>
@@ -90,7 +125,7 @@ const Dashborad = ({ theme, setNavon, setTheme }) => {
               <li>
                 <Link
                   to="/dashboard"
-                  className={`flex w-full  items-center p-2 text-gray-900 rounded-lg active dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
+                  className={`flex w-full  items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
                 >
                   <div>
                     <FaUserAlt />
@@ -101,7 +136,7 @@ const Dashborad = ({ theme, setNavon, setTheme }) => {
               <li>
                 <Link
                   to="/deposit"
-                  className={`flex w-full items-center p-2 text-gray-900 rounded-lg  dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
+                  className={`flex w-full items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
                 >
                   <div>
                     <BsDownload />
@@ -123,7 +158,7 @@ const Dashborad = ({ theme, setNavon, setTheme }) => {
               <li>
                 <Link
                   to="/crypto"
-                  className={`flex w-full items-center p-2 text-gray-900 rounded-lg  dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
+                  className={`flex w-full items-center active p-2 text-gray-900 rounded-lg  dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700`}
                 >
                   <div>
                     <FaBtc />
@@ -147,55 +182,64 @@ const Dashborad = ({ theme, setNavon, setTheme }) => {
 
         <div className="p-4 lg:ml-56 dark:bg-gray-700 min-h-screen ">
           <div className="md:p-4  rounded-lg dark:border-gray-700 mt-14">
-            <h1 className="text-xl dark:text-white mb-3 font-medium">
-              Hello, User
+            <h1 className="text-xl dark:text-white my-3 font-medium">
+              Your Assets
             </h1>
-            <div className="grid border-gray-800 rounded p-2 border-dashed border-2 lg:grid-cols-3 gap-4 mb-4">
-              {/* Assets value  */}
-
-              <div className="flex min-w-[240px] w-full border-gray-500 justify-between border-2 dark:border-0 text-gray-900 dark:text-white p-4 flex-col min-h-24 rounded bg-gray-50 dark:bg-gray-800">
-                <div className="text-lg overflow-ellipsis mb-3">
-                  Total Assets Value:
-                </div>
-                <div className="text-2xl mb-3 font-medium">$0.00</div>
-                <hr />
-                <div className="flex items-center gap-3">
-                  <button className="bg-green-100 mt-3 px-3 py-1 rounded hover:bg-green-500 hover:text-white dark:hover:text-white dark:text-gray-900 ">
-                    Deposit
-                  </button>
-                  <button className="bg-red-100 mt-3 px-3 py-1 rounded hover:bg-red-500 hover:text-white dark:hover:text-white dark:text-gray-900 ">
-                    Withdraw
-                  </button>
-                </div>
+            <main className="grid place-items-center w-full">
+              <div className="grid w-full max-w-3xl  border-gray-800 mt-5 dark:text-white rounded border-dashed border-2 gap-4 mb-4">
+                <h1 className="w-full text-center h-32 grid place-items-center text-white font-bold text-2xl bg-gray-900 ">
+                  $0.00
+                </h1>
+                {prices ? (
+                  <section className="w-full p-2 md:px-5 gap-5 grid">
+                    <Template
+                      src={prices?.btc?.icon}
+                      name={prices?.btc?.name}
+                      price={prices.btc?.price}
+                      change={prices.btc?.priceChange1d}
+                      amount={1000}
+                    />
+                    <Template
+                      src={prices?.eth?.icon}
+                      name={prices?.eth?.name}
+                      price={prices.eth?.price}
+                      change={prices.eth?.priceChange1d}
+                      amount={1000}
+                    />
+                    <Template
+                      src={prices?.usdt?.icon}
+                      name={prices?.usdt?.name}
+                      price={prices.usdt?.price}
+                      change={prices.usdt?.priceChange1d}
+                      amount={1000}
+                    />
+                    <Template
+                      src={prices?.bsc?.icon}
+                      name={prices?.bsc?.name}
+                      price={prices.bsc?.price}
+                      change={prices.bsc?.priceChange1d}
+                      amount={1000}
+                    />
+                    <Template
+                      src={prices?.ripple?.icon}
+                      name={prices?.ripple?.name}
+                      price={prices.ripple?.price}
+                      change={prices.ripple?.priceChange1d}
+                      amount={1000}
+                    />
+                    <Template
+                      src={prices?.sol?.icon}
+                      name={prices?.sol?.name}
+                      price={prices.sol?.price}
+                      change={prices.sol?.priceChange1d}
+                      amount={1000}
+                    />
+                  </section>
+                ) : (
+                  <h1>Loading</h1>
+                )}
               </div>
-
-              {/* Staked Assets  */}
-
-              <div className="flex min-w-[240px] w-full border-gray-500 justify-between border-2 dark:border-0 text-gray-900 dark:text-white p-4 flex-col min-h-24 rounded bg-gray-50 dark:bg-gray-800">
-                <div className="text-lg overflow-ellipsis mb-3">
-                  Staked Assets Value:
-                </div>
-                <div className="text-2xl mb-3 font-medium">$0.00</div>
-                <hr />
-                <div className="flex items-center gap-3">
-                  <button className="bg-green-100 mt-3 px-3 py-1 rounded hover:bg-green-500 hover:text-white dark:hover:text-white dark:text-gray-900 ">
-                    Investments
-                  </button>
-                </div>
-              </div>
-
-              {/* Referrals  */}
-              <div className="flex min-w-[240px] w-full border-gray-500 justify-between border-2 dark:border-0 text-gray-900 dark:text-white p-4 flex-col min-h-24 rounded bg-gray-50 dark:bg-gray-800">
-                <div className="text-lg overflow-ellipsis mb-3">Referrals:</div>
-                <div className="text-2xl mb-3 font-medium">0</div>
-                <hr />
-                <div className="flex items-center gap-3">
-                  <button className="bg-green-100 mt-3 px-3 py-1 rounded hover:bg-zinc-600  hover:text-white dark:hover:text-white dark:text-gray-900 ">
-                    Referral
-                  </button>
-                </div>
-              </div>
-            </div>
+            </main>
           </div>
         </div>
       </div>
@@ -203,4 +247,30 @@ const Dashborad = ({ theme, setNavon, setTheme }) => {
   );
 };
 
-export default Dashborad;
+const Template = ({ src, name, price, change, amount }) => {
+  return (
+    <div className="flex items-center justify-between text-center gap-3 border-b-2 pb-3">
+      <img src={src} alt="" className="w-10" />
+      <div>
+        <h1>{name}</h1>
+        <p>
+          {price?.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}
+        </p>
+      </div>
+      <div>
+        <p>
+          {(amount / price)?.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 5,
+          })}
+        </p>
+        <p>${amount}</p>
+      </div>
+    </div>
+  );
+};
+
+export default Crypto;

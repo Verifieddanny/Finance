@@ -8,9 +8,12 @@ import { ServicePage } from "./Pages/Services";
 import { ErrorPage } from "./Pages/ErrorPage";
 import { FooterComponent } from "./Pages/Footer";
 import { BsSun, BsMoon } from "react-icons/bs";
-
 import logo from "./assets/navbar/logo_at_nav_bar.png";
 import Dashborad from "./Pages/Dashborad";
+import Deposit from "./Pages/dashboardComponents/Deposit";
+import Withdraw from "./Pages/dashboardComponents/Withdraw";
+import Crypto from "./Pages/dashboardComponents/CryptoWallet";
+
 function App() {
   const localS = localStorage.getItem("theme");
   const [theme, setTheme] = useState(localS);
@@ -103,6 +106,24 @@ function App() {
                 setNavon={setNavOn}
                 setTheme={setTheme}
               />
+            }
+          />
+          <Route
+            path="/deposit"
+            element={
+              <Deposit theme={theme} setNavon={setNavOn} setTheme={setTheme} />
+            }
+          />
+          <Route
+            path="/withdraw"
+            element={
+              <Withdraw theme={theme} setNavon={setNavOn} setTheme={setTheme} />
+            }
+          />
+          <Route
+            path="/crypto"
+            element={
+              <Crypto theme={theme} setNavon={setNavOn} setTheme={setTheme} />
             }
           />
           <Route path="/*" element={<ErrorPage />} />
