@@ -149,3 +149,12 @@ a {
 .footerBottom {
   @apply w-full flex justify-center;
 }
+.active {
+  @apply bg-gray-100 dark:bg-gray-900;
+}
+
+input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
