@@ -160,12 +160,18 @@ const Dashborad = ({ theme, setNavon, setTheme }) => {
                 <div className="text-2xl mb-3 font-medium">$0.00</div>
                 <hr />
                 <div className="flex items-center gap-3">
-                  <button className="bg-green-100 mt-3 px-3 py-1 rounded hover:bg-green-500 hover:text-white dark:hover:text-white dark:text-gray-900 ">
+                  <Link
+                    to="/deposit"
+                    className="bg-green-100 mt-3 px-3 py-1 rounded hover:bg-green-500 hover:text-white dark:hover:text-white dark:text-gray-900 "
+                  >
                     Deposit
-                  </button>
-                  <button className="bg-red-100 mt-3 px-3 py-1 rounded hover:bg-red-500 hover:text-white dark:hover:text-white dark:text-gray-900 ">
+                  </Link>
+                  <Link
+                    to="/withdraw"
+                    className="bg-red-100 mt-3 px-3 py-1 rounded hover:bg-red-500 hover:text-white dark:hover:text-white dark:text-gray-900 "
+                  >
                     Withdraw
-                  </button>
+                  </Link>
                 </div>
               </div>
 
