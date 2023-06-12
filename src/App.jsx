@@ -49,7 +49,7 @@ function App() {
               className={`InnerNav ${
                 open
                   ? "top-0 opacity-100"
-                  : "top-[-1000%] md:opacity-100 pointer-events-none md:pointer-events-auto opacity-0"
+                  : "top-[-1000%] lg:opacity-100 pointer-events-none md:pointer-events-auto opacity-0"
               }`}
               onClick={() => setOpen(!open)}
             >
@@ -79,7 +79,7 @@ function App() {
                     }
                   });
                 }}
-                className="flex NavLinks  "
+                className="grid place-items-center w-full NavLinks   "
               >
                 {theme === "dark" ? <BsSun /> : <BsMoon />}
               </button>

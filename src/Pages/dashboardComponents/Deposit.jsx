@@ -16,6 +16,7 @@ const Deposit = ({ theme, setNavon, setTheme }) => {
   const [prices, setCoins] = useState({});
   const [selected, setSelected] = useState("bitcoin");
   const [value, setValue] = useState(0);
+  const [display, setDisplay] = useState(false);
   const [amount, setAmount] = useState(0);
 
   useEffect(() => {
@@ -181,7 +182,7 @@ const Deposit = ({ theme, setNavon, setTheme }) => {
         {/* Main Dashboard  */}
 
         <div className="p-4 lg:ml-56 dark:bg-gray-700 min-h-screen ">
-          <div className="md:p-4  rounded-lg dark:border-gray-700 mt-14">
+          <div className="md:p-4 relative rounded-lg dark:border-gray-700 mt-14">
             <h1 className="text-xl dark:text-white mb-3 font-medium">
               Deposit Funds
             </h1>
@@ -231,6 +232,9 @@ const Deposit = ({ theme, setNavon, setTheme }) => {
                     className="w-full px-2 border-2 pointer-events-none dark:border-0 bg-gray-200 py-4 rounded-lg text-gray-900 dark:text-white font-medium outline-none dark:bg-gray-800 "
                   />
                   <button
+                    onClick={() => {
+                      setDisplay(true);
+                    }}
                     disabled={Number(value) < 100}
                     className="w-full h-12 mt-5 disabled:text-gray-900 rounded-xl disabled:cursor-not-allowed disabled:dark:text-white disabled:dark:bg-slate-500 disabled:bg-slate-300 bg-slate-600 text-white dark:bg-slate-800  "
                   >
@@ -242,6 +246,46 @@ const Deposit = ({ theme, setNavon, setTheme }) => {
           </div>
         </div>
       </div>
+      <Overflow
+        amount={amount}
+        currency="btc"
+        setDisplay={setDisplay}
+        display={display}
+      />
+    </>
+  );
+};
+
+// Overflow Modal
+
+const Overflow = ({ amount, currency, display, setDisplay }) => {
+  return (
+    <>
+      <section
+        className={`absolute bg-opacity-80 ${
+          !display && "hidden"
+        }  dark:bg-opacity-30 lg:pl-56 px-10 top-0 grid place-items-center bg-white w-full h-screen `}
+      >
+        <main
+          onClick={() => {
+            setDisplay(false);
+          }}
+          className="absolute w-full h-full top-0 z-[1]"
+        ></main>
+        <div className="px-5 z-[2] py-10 rounded-xl w-full text-center text-white  bg-gray-700">
+          <p className="text-xl font-medium ">
+            Send {amount} {currency}
+          </p>
+          <button
+            onClick={() => {
+              setDisplay(false);
+            }}
+            className="text-lg mt-5 rounded-lg font-medium bg-green-500 text-white px-3 py-1 "
+          >
+            I've paid.
+          </button>
+        </div>
+      </section>
     </>
   );
 };

@@ -21,19 +21,19 @@ a {
 }
 
 .nav {
-  @apply w-screen md:h-[5rem] backdrop-blur-md bg-white md:bg-[#00000049] fixed top-0 left-0 flex justify-between items-center px-[4rem] text-white text-xl z-30 h-[3.5rem];
+  @apply w-screen md:h-[5rem] backdrop-blur-md  bg-[#00000049] fixed top-0 left-0 flex justify-between items-center px-3 lg:px-[4rem] text-white text-xl z-30 h-[3.5rem];
 }
 .InnerNav {
-  @apply md:w-[80%] md:h-full flex flex-col md:static md:flex-row justify-between md:justify-center gap-x-[6rem] md:items-center absolute left-0  z-[-20] w-screen h-screen md:text-white md:py-0 pt-[4rem] pb-[3rem] md:bg-transparent bg-white text-black transition-all duration-700;
+  @apply lg:w-[80%] lg:h-full dark:bg-gray-700 lg:dark:bg-transparent dark:text-white flex flex-col px-3 md:px-0 text-center lg:text-start lg:static lg:flex-row justify-between lg:justify-center gap-x-[6rem] md:items-center absolute left-0  z-[-20] w-screen h-screen lg:text-white lg:py-0 pt-[4rem] pb-[3rem] lg:bg-transparent bg-white text-black transition-all duration-700;
 }
 .menu {
-  @apply absolute right-8 top-2 px-[2rem] py-[0.5rem] hover:opacity-75 bg-slate-700 rounded-md md:hidden transition-all duration-700;
+  @apply absolute right-3 md:top-4 top-2 px-[2rem] py-[6px] md:py-[0.5rem] hover:opacity-75 bg-slate-700 rounded-md lg:hidden transition-all duration-700;
 }
 .NavLinks {
   @apply md:hover:scale-110 hover:text-[#0000777] transition-all duration-500;
 }
 .logo {
-  @apply w-[3rem] h-[3rem] cursor-pointer;
+  @apply w-10  md:w-[3rem] md:h-[3rem] cursor-pointer;
 }
 .body {
   @apply w-screen h-screen;
